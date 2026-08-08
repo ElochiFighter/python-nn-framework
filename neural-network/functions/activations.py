@@ -32,12 +32,12 @@ def GELU(x):
     return 0.5 * x * (1 + math.tanh(inner))
 
 def ELU(x, alpha=1.0):
-    return x if x > 0 else alpha * (math.exp(x) - 1)
+    return x if x > 0 else alpha * math.expm1(x)
 
 def SELU(x):
     alpha = 1.6732632423543772848170429916717
     scale = 1.0507009873554804934193349852946
-    return scale * (x if x > 0 else alpha * (math.exp(x) - 1))
+    return scale * (x if x > 0 else alpha * math.expm1(x))
 
 def Mish(x):
     clamped_x = max(-500, min(500, x))
