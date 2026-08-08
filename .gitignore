@@ -1,1 +1,26 @@
+# Python bytecode (pycache)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
+# Windows system files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+
+# VS Code workspace files
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Python virtual environments (highly recommended)
+.venv/
+venv/
+ENV/
+env/
