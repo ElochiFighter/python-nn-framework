@@ -7,7 +7,7 @@ A lightweight, educational deep learning framework written in **pure Python** us
 * **Modern Activations:** Includes custom implementations of `ReLU`, `GELU`, `Mish`, `Softmax`, and more.
 * **Modular Design:** Dynamic object-oriented layers, sequential model piping, and built-in loss calculations.
 
-## Matrix of Implemented Activations
+## Table of Implemented Activations
 
 | Function | Formula | Best Used For |
 | :--- | :--- | :--- |
