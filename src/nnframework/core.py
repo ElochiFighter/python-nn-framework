@@ -19,6 +19,12 @@ class Layer:
         self.neurons = neurons
         self.function = function
 
+    def get_weights(self) -> Sequence[Sequence[float]]:
+        return [neuron.get_weights() for neuron in self.neurons]
+
+    def get_biases(self) -> Sequence[float]:
+        return [neuron.get_bias() for neuron in self.neurons]
+
     def forward(self, inputs: Sequence[Number]) -> Sequence[float]:
         out = []
         for neuron in self.neurons:

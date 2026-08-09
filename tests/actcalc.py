@@ -3,7 +3,7 @@ import random
 from nnframework import core
 from nnframework.functions import activations
 
-random.seed(42)  # weight reproduction
+random.seed(67)  # weight reproduction + funny number
 
 inputs = [2, -3, 5, 0.6]
 
