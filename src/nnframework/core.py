@@ -1,5 +1,6 @@
 from __future__ import annotations
 from .functions import activations as func
+from .functions import losses as loss
 from collections.abc import Sequence
 from numbers import Number
 
@@ -36,6 +37,9 @@ class Layer:
             return func.Softmax(out)
         function = getattr(func, self.function)
         return list(map(function, out))
+
+    def backward(self, output_gradient: Sequence[float]):
+        pass  # Placeholder for backward propagation logic
 
 class Neuron:
     def __init__(self, weights: Sequence[float], bias: float):

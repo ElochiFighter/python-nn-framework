@@ -41,5 +41,5 @@ def SELU(x):
 
 def Mish(x):
     clamped_x = max(-500, min(500, x))
-    softplus = math.log(1 + math.exp(clamped_x))
+    softplus = math.log1p(math.exp(clamped_x))
     return x * math.tanh(softplus)
