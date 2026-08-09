@@ -39,6 +39,9 @@ class Layer:
         function = getattr(func, self.function)
         return list(map(function, out))
 
+    def get_function(self):
+        return self.function
+
     def backward(self, output_gradient: Sequence[float]):
         pass  # Placeholder for backward propagation logic
 
