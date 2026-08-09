@@ -25,6 +25,9 @@ class Layer:
             out.append(neuron.compute(inputs))
         if self.function is None:
             return out
+        if self.function == "Softmax":
+            # Softmax is a special case, because it needs to be applied to the entire output vector
+            return func.Softmax(out)
         function = getattr(func, self.function)
         return list(map(function, out))
 
