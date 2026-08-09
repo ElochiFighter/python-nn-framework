@@ -33,7 +33,8 @@ neurons = build_neurons(4, len(inputs))
 for name in activation_names:
     layer = core.Layer(neurons, function=name)
     try:
-        output = layer.forward(inputs)
+        output, cache = layer.forward(inputs)
         print(f"{name}: {output}")
+        print(f"Cache: {cache}")
     except Exception as e:
         print(f"{name}: FAILED -> {type(e).__name__}: {e}")

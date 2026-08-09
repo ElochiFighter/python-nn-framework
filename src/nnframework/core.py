@@ -1,5 +1,5 @@
-import math
 from __future__ import annotations
+import math
 from .functions import activations as func
 from .functions import losses as loss
 from collections.abc import Sequence
@@ -10,11 +10,13 @@ class NeuralNetwork:
         self.inputs = inputs
         self.layers = layers
 
-    def forward(self) -> Sequence[float]:
+    def forward(self) -> tuple[Sequence[float], tuple]:
         current_signals = self.inputs
+        cache = ()
         for layer in self.layers:
-            current_signals = layer.forward(current_signals)
-        return current_signals
+            current_signals, layer_cache = layer.forward(current_signals)
+            cache += (layer_cache,)
+        return current_signals, cache
 
 class Layer:
     def __init__(self, neurons: Sequence[Neuron], function: str | None = None):
@@ -27,17 +29,20 @@ class Layer:
     def get_biases(self) -> Sequence[float]:
         return [neuron.get_bias() for neuron in self.neurons]
 
-    def forward(self, inputs: Sequence[Number]) -> Sequence[float]:
-        out = []
-        for neuron in self.neurons:
-            out.append(neuron.compute(inputs))
+    def forward(self, inputs: Sequence[Number]) -> tuple[Sequence[float], tuple]:
+        pre_activ = [neuron.compute(inputs) for neuron in self.neurons]
+
         if self.function is None:
-            return out
-        if self.function == "Softmax":
+            outputs = pre_activ
+        elif self.function == "Softmax":
             # Softmax is a special case, because it needs to be applied to the entire output vector
-            return func.Softmax(out)
-        function = getattr(func, self.function)
-        return list(map(function, out))
+            outputs = func.Softmax(pre_activ)
+        else:
+            function = getattr(func, self.function)
+            outputs = list(map(function, pre_activ))
+
+        cache = (inputs, pre_activ, outputs)
+        return outputs, cache
 
     def get_function(self):
         return self.function

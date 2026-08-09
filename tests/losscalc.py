@@ -20,7 +20,7 @@ output_layer = core.Layer(random_neuron_list(4, 4))
 layers = [input_layer, output_layer]
 
 network = core.NeuralNetwork(inputs, layers)
-prediction = network.forward()
+prediction, cache = network.forward()
 
 print(f"Prediction: {prediction}")
 print(f"Goal:       {goal}")
