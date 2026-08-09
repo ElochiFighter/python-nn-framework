@@ -1,7 +1,7 @@
 # Implementation of the derivatives of common activation functions
 
 import math
-import functions.activations as func
+from . import activations as func
 
 def ReLU(x):
     return 1.0 if x > 0 else 0.0

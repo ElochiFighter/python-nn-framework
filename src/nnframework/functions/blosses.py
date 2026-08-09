@@ -1,6 +1,6 @@
 # Implementation of the derivatives of common loss functions
 
-import functions.losses as func
+from . import losses as func
 
 def mean_squared_error(actual, predictions):
     n = len(actual)
