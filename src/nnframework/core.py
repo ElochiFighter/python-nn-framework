@@ -2,6 +2,8 @@ from __future__ import annotations
 import math
 from .functions import activations as func
 from .functions import losses as loss
+from .functions import bactivation as bfunc
+from .functions import blosses as bloss
 from collections.abc import Sequence
 from numbers import Number
 

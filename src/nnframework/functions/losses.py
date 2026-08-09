@@ -1,4 +1,4 @@
-# Implementation of common activation functions
+# Implementation of common loss functions
 
 import math
 from collections.abc import Sequence
