@@ -18,7 +18,7 @@ def TanH(x):
 def Softmax(vector):
     max_val = max(vector)
     exp_vector = [math.exp(x - max_val) for x in vector]
-    sum_exp = sum(exp_vector)
+    sum_exp = math.fsum(exp_vector)
     return [exp_x / sum_exp for exp_x in exp_vector]
 
 

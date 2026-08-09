@@ -1,3 +1,4 @@
+import math
 from __future__ import annotations
 from .functions import activations as func
 from .functions import losses as loss
@@ -58,4 +59,4 @@ class Neuron:
     def compute(self, inputs: Sequence[Number]) -> float:
         if len(inputs) != len(self.weights):
             raise ValueError(f"Input size ({len(inputs)}) must match weight size ({len(self.weights)})")
-        return sum(i * w for i, w in zip(inputs, self.weights)) + self.bias
+        return math.fsum(i * w for i, w in zip(inputs, self.weights)) + self.bias
