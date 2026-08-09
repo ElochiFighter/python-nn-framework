@@ -1,5 +1,5 @@
 from __future__ import annotations
-import functions.activationfunctions as func
+from .functions import activations as func
 from collections.abc import Sequence
 from numbers import Number
 

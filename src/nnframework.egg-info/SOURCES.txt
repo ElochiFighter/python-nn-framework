@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+src/nnframework/__init__.py
+src/nnframework/core.py
+src/nnframework.egg-info/PKG-INFO
+src/nnframework.egg-info/SOURCES.txt
+src/nnframework.egg-info/dependency_links.txt
+src/nnframework.egg-info/top_level.txt
+src/nnframework/functions/activations.py
+src/nnframework/functions/losses.py

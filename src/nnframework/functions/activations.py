@@ -1,4 +1,4 @@
-# Implementation of common loss functions
+# Implementation of common activation functions
 
 import math
 
