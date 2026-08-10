@@ -56,7 +56,7 @@ class Layer:
             activation_derivs = [1.0 for _ in pre_activ]
             delta = [output_gradient[i] * activation_derivs[i] for i in range(len(self.neurons))]
         elif self.function == "Softmax":
-            jacobian = bfunc.Softmax_derivative(outputs)   # n x n matrix
+            jacobian = bfunc.Softmax(outputs)
             n = len(self.neurons)
             delta = [sum(output_gradient[k] * jacobian[k][i] for k in range(n)) for i in range(n)]
         else:

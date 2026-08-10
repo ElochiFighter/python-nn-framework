@@ -15,7 +15,15 @@ def TanH(x):
     return 1 - t ** 2
 
 def Softmax(vector):
-    pass  # Softmax derivative is more complex and usually handled differently in practice
+    n = len(vector)
+    jacobian = []
+    for k in range(n):
+        row = []
+        for i in range(n):
+            indicator = 1.0 if k == i else 0.0
+            row.append(vector[k] * (indicator - vector[i]))
+        jacobian.append(row)
+    return jacobian
 
 def Swish(x, beta=1.0):
     s = func.Swish(x, beta)
