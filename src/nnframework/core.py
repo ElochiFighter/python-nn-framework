@@ -49,8 +49,34 @@ class Layer:
     def get_function(self):
         return self.function
 
-    def backward(self, output_gradient: Sequence[float]):
-        pass  # Placeholder for backward propagation logic
+    def backward(self, output_gradient: Sequence[float], cache: tuple) -> tuple[Sequence[float], Sequence[Sequence[float]], Sequence[float]]:
+        inputs, pre_activ, outputs = cache
+
+        if self.function is None:
+            activation_derivs = [1.0 for _ in pre_activ]
+            delta = [output_gradient[i] * activation_derivs[i] for i in range(len(self.neurons))]
+        elif self.function == "Softmax":
+            jacobian = bfunc.Softmax_derivative(outputs)   # n x n matrix
+            n = len(self.neurons)
+            delta = [sum(output_gradient[k] * jacobian[k][i] for k in range(n)) for i in range(n)]
+        else:
+            deriv_fn = getattr(bfunc, self.function)
+            activation_derivs = [deriv_fn(z) for z in pre_activ]
+            delta = [output_gradient[i] * activation_derivs[i] for i in range(len(self.neurons))]
+
+        weight_gradients = []
+        bias_gradients = []
+        for i, neuron in enumerate(self.neurons):
+            neuron_weight_gradient = [delta[i] * inputs[j] for j in range(len(neuron.weights))]
+            weight_gradients.append(neuron_weight_gradient)
+            bias_gradients.append(delta[i])
+
+        input_gradient = [0.0 for _ in inputs]
+        for i, neuron in enumerate(self.neurons):
+            for j in range(len(neuron.weights)):
+                input_gradient[j] += delta[i] * neuron.weights[j]
+
+        return input_gradient, weight_gradients, bias_gradients
 
 class Neuron:
     def __init__(self, weights: Sequence[float], bias: float):
