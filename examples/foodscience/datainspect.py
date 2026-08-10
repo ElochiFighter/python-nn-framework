@@ -417,16 +417,17 @@ print(
     complete_result.to_string(index=False)
 )
 
+
 # ============================================================
-# BUILD ML DATASET
+# BUILD FOOD SCIENCE ML DATASET (features + Vitamin B-6 target)
 # ============================================================
 
 print()
 print("=" * 100)
-print("BUILDING ML DATASET")
+print("BUILDING FOOD SCIENCE ML DATASET")
 print("=" * 100)
 
-features = [
+FEATURES = [
     "Water",
     "Ash",
     "Total lipid (fat)",
@@ -438,67 +439,78 @@ features = [
     "Potassium, K",
     "Sodium, Na",
     "Zinc, Zn",
-    "Nitrogen"
+    "Nitrogen",
 ]
 
-placeholders = ",".join("?" for _ in features)
+TARGET = "Vitamin B-6"
 
+nutrient_names = FEATURES + [TARGET]
+placeholders = ",".join("?" for _ in nutrient_names)
+
+# Prefer the lab-adjusted amount when available, falling back to the
+# raw food_nutrient amount otherwise. Multiple subsamples per sample
+# are averaged together into one value per sample_fdc_id.
 ml_query = f"""
 SELECT
-    sf.fdc_id,
+    sf.fdc_id AS sample_fdc_id,
     f.description,
     n.name AS nutrient_name,
-    fn.amount
-
+    AVG(
+        CASE
+            WHEN ssr.adjusted_amount IS NOT NULL THEN ssr.adjusted_amount
+            ELSE fn.amount
+        END
+    ) AS amount
 FROM sample_food AS sf
-
 JOIN food AS f
     ON sf.fdc_id = f.fdc_id
-
 JOIN sub_sample_food AS ssf
     ON sf.fdc_id = ssf.fdc_id_of_sample_food
-
 JOIN food_nutrient AS fn
     ON ssf.fdc_id = fn.fdc_id
-
 JOIN nutrient AS n
     ON fn.nutrient_id = n.id
-
-WHERE n.name IN ({placeholders});
+LEFT JOIN sub_sample_result AS ssr
+    ON fn.id = ssr.food_nutrient_id
+WHERE n.name IN ({placeholders})
+GROUP BY sf.fdc_id, f.description, n.name
 """
 
-ml_long = pd.read_sql_query(
-    ml_query,
-    connection,
-    params=features
-)
+ml_long = pd.read_sql_query(ml_query, connection, params=nutrient_names)
 
-print("Long dataset:")
+print()
+print("Long dataset (features + target):")
 print(ml_long.head())
 print(ml_long.shape)
 
 ml_wide = ml_long.pivot_table(
-    index=["fdc_id", "description"],
+    index=["sample_fdc_id", "description"],
     columns="nutrient_name",
     values="amount",
-    aggfunc="mean"
+    aggfunc="mean",
 ).reset_index()
+ml_wide.columns.name = None
 
-ml_wide = ml_wide.dropna(
-    subset=features
-)
+# Require every feature AND the target to be present — a row missing
+# any of these is useless for supervised training.
+ml_wide = ml_wide.dropna(subset=FEATURES + [TARGET]).reset_index(drop=True)
 
 print()
-print("Wide ML dataset:")
+print("Final food_ml dataset:")
 print(ml_wide.head())
+print()
+print("Shape:", ml_wide.shape)
+print("Columns:", ml_wide.columns.tolist())
+
+ml_wide.to_sql("food_ml", connection, if_exists="replace", index=False)
+
+ML_CSV_PATH = CSV_DIR.parent / "food_ml.csv"
+ml_wide.to_csv(ML_CSV_PATH, index=False)
 
 print()
-print("Shape:")
-print(ml_wide.shape)
+print(f"Saved SQLite table: food_ml ({len(ml_wide)} rows)")
+print(f"Saved CSV: {ML_CSV_PATH}")
 
-print()
-print("Columns:")
-print(ml_wide.columns)
 
 connection.commit()
 connection.close()
