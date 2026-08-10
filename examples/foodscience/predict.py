@@ -129,4 +129,4 @@ for i in range(NUM_RANDOM_FOODS):
     print(f"\nRandom food #{i + 1}:")
     for f in FEATURES:
         print(f"  {f:20s} {profile[f]:8.3f}")
-    print(f"  --> Predicted Vitamin B-6: {predicted_b6:.4f} mg")
+    print(f"  --> Predicted Vitamin B-6: {predicted_b6:.4f} mg (per 100g)")
