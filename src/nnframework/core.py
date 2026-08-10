@@ -8,9 +8,10 @@ from collections.abc import Sequence
 from numbers import Number
 
 class NeuralNetwork:
-    def __init__(self, inputs: Sequence[Number], layers: Sequence[Layer]):
+    def __init__(self, inputs: Sequence[Number], layers: Sequence[Layer], loss_function="mean_squared_error"):
         self.inputs = inputs
         self.layers = layers
+        self.loss_function = loss_function
 
     def forward(self) -> tuple[Sequence[float], tuple]:
         current_signals = self.inputs
@@ -19,6 +20,17 @@ class NeuralNetwork:
             current_signals, layer_cache = layer.forward(current_signals)
             cache += (layer_cache,)
         return current_signals, cache
+
+    def train_step(self, true_outputs: Sequence[Number], learning_rate: float):
+        predicted_outputs, cache = self.forward()
+        loss_derivative_fn = getattr(bloss, self.loss_function)
+        gradient = loss_derivative_fn(true_outputs, predicted_outputs)
+
+        for layer, layer_cache in reversed(list(zip(self.layers, cache))):
+            gradient, weight_gradients, bias_gradients = layer.backward(gradient, layer_cache)
+            layer.update(weight_gradients, bias_gradients, learning_rate)
+
+        return predicted_outputs
 
 class Layer:
     def __init__(self, neurons: Sequence[Neuron], function: str | None = None):
