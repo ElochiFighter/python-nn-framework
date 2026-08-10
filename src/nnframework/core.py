@@ -78,6 +78,10 @@ class Layer:
 
         return input_gradient, weight_gradients, bias_gradients
 
+    def update(self, weight_gradients: Sequence[Sequence[float]], bias_gradients: Sequence[float], learning_rate: float):
+        for i, neuron in enumerate(self.neurons):
+            neuron.update(weight_gradients[i], bias_gradients[i], learning_rate)
+    
 class Neuron:
     def __init__(self, weights: Sequence[float], bias: float):
         self.weights = list(weights)
@@ -96,3 +100,8 @@ class Neuron:
         if len(inputs) != len(self.weights):
             raise ValueError(f"Input size ({len(inputs)}) must match weight size ({len(self.weights)})")
         return math.fsum(i * w for i, w in zip(inputs, self.weights)) + self.bias
+
+    def update(self, weight_gradients: Sequence[float], bias_gradient: float, learning_rate: float):
+        new_weights = [self.weights[j] - learning_rate * weight_gradients[j] for j in range(len(self.weights))]
+        self.set_weights(new_weights)
+        self.bias -= learning_rate * bias_gradient
