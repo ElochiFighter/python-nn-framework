@@ -2,7 +2,7 @@ import random
 from nnframework import core
 from nnframework.functions import losses
 
-random.seed(42)  # remove this if you want different random weights each run
+random.seed(42)
 
 inputs = [2.0, -3.0, 5.0, 0.6]
 goal = [-1.0, 0.0, 4.0, 1.2]
@@ -15,13 +15,18 @@ def random_neuron_list(num_neurons, num_weights_per_neuron):
         neurons.append(core.Neuron(weights, random.uniform(-1, 1)))
     return neurons
 
+input_layer = core.Layer(random_neuron_list(4, 4), function=None)
 
-hidden_layer = core.Layer(random_neuron_list(6, 4), function="Sigmoid")
+hidden_layer_1 = core.Layer(random_neuron_list(6, 4), function="Sigmoid")
+hidden_layer_2 = core.Layer(random_neuron_list(6, 6), function="Sigmoid")
+hidden_layer_3 = core.Layer(random_neuron_list(6, 6), function="Sigmoid")
+hidden_layer_4 = core.Layer(random_neuron_list(6, 6), function="Sigmoid")
+
 output_layer = core.Layer(random_neuron_list(4, 6), function=None)
 
 network = core.NeuralNetwork(
     inputs,
-    [hidden_layer, output_layer],
+    [input_layer, hidden_layer_1, hidden_layer_2, hidden_layer_3, hidden_layer_4, output_layer],
     loss_function="mean_squared_error",
 )
 
