@@ -28,8 +28,17 @@ src/nnframework/
     ├── bactivation.py         # Activation derivatives (for backprop)
     ├── losses.py               # Forward loss functions
     └── blosses.py               # Loss derivatives (for backprop)
+└── examples/
+    └── foodscience/
+        └── database/
+            ├── fooddata.db
+        ├── datainspect.py
+        ├── predict.py
+        ├── train.py 
 tests/
 ├── actcalc.py                 # Sanity-checks a forward pass + loss calculation
+├── train.py
+├── multivar.py 
 └── losscalc.py                 # Sanity-checks loss functions against a random network
 ```
 
