@@ -24,3 +24,6 @@ Desktop.ini
 venv/
 ENV/
 env/
+
+# Food science data files
+examples/foodscience/data/
