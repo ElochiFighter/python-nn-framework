@@ -13,8 +13,11 @@ class NeuralNetwork:
         self.layers = layers
         self.loss_function = loss_function
 
-    def forward(self) -> tuple[Sequence[float], tuple]:
-        current_signals = self.inputs
+    def forward(self, inputs: Sequence[Number] | None = None) -> tuple[Sequence[float], tuple]:
+        if inputs is None:
+            inputs = self.inputs
+
+        current_signals = inputs
         cache = ()
         for layer in self.layers:
             current_signals, layer_cache = layer.forward(current_signals)
@@ -31,6 +34,10 @@ class NeuralNetwork:
             layer.update(weight_gradients, bias_gradients, learning_rate)
 
         return predicted_outputs
+
+    def predict(self, inputs: Sequence[Number]) -> Sequence[float]:
+        outputs, _ = self.forward(inputs)
+        return outputs
 
 class Layer:
     def __init__(self, neurons: Sequence[Neuron], function: str | None = None):
