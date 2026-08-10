@@ -42,3 +42,7 @@ for epoch in range(epochs):
 print()
 print(f"Goal:             {goal}")
 print(f"Final prediction: {[round(p, 3) for p in prediction]}")
+
+new_inputs = [1.0, -2.0, 3.0, 0.5]
+new_prediction = network.predict(new_inputs)
+print(f"Prediction for new inputs {new_inputs}: {[round(p, 3) for p in new_prediction]}")
